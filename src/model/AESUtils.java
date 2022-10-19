@@ -5,7 +5,6 @@
 package model;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -119,5 +118,14 @@ public class AESUtils {
 
     public Integer getVetRoundConstant(Integer indice) {
         return roundConstant[indice];
+    }
+    
+    public byte[][] mudarVetParaBidimensional(byte[] matriz, int largura) {
+      int altura = matriz.length / largura;
+      byte[][] ret = new byte[altura][largura];
+      for (int i = 0; i < matriz.length; i++) {
+            ret[i/largura][i%largura] = matriz[i];
+      }
+      return ret;
     }
 }
