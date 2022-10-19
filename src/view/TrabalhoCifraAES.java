@@ -19,13 +19,14 @@ public static void main(String[] args) throws Exception {
     }
 
     public void init() throws Exception{
-//        CifraAESUI ui = new CifraAESUI();;;;;;
-//        ui.setVisible(true);
+       CifraAESUI ui = new CifraAESUI();;;;;;
+        ui.setVisible(true);
         File file = new File("C:\\Users\\Lucas\\Desktop\\seguranca\\CifraAES\\src\\view\\teste.txt");
         byte[] retorno;
         AESUtils utils = new AESUtils();
         retorno = utils.codificarFileToBinary(file);
-        System.out.print(retorno);
+        System.out.print(retorno.toString());
+        
 
     }
 }
