@@ -6,7 +6,10 @@
 package view;
 
 import java.io.File;
+import java.util.ArrayList;
 import model.AESUtils;
+import model.ExecutadorRotinas;
+import model.RoundKey;
 
 /**
  *
@@ -19,14 +22,17 @@ public static void main(String[] args) throws Exception {
     }
 
     public void init() throws Exception{
-       CifraAESUI ui = new CifraAESUI();;;;;;
-        ui.setVisible(true);
-        File file = new File("C:\\Users\\Lucas\\Desktop\\seguranca\\CifraAES\\src\\view\\teste.txt");
-        byte[] retorno;
-        AESUtils utils = new AESUtils();
-        retorno = utils.codificarFileToBinary(file);
-        System.out.print(retorno.toString());
-        
+        //CifraAESUI ui = new CifraAESUI();;;;;;
+        //ui.setVisible(true);
+        // file = new File("C:\\Users\\Lucas\\Desktop\\seguranca\\CifraAES\\src\\view\\teste.txt");
+        //byte[] retorno;
+        //AESUtils utils = new AESUtils();
+        //retorno = utils.codificarFileToBinary(file);
+        //System.out.print(retorno.toString());
+        ExecutadorRotinas er = new ExecutadorRotinas();
+        String texto = "41,42,43,44,45,46,47,48,49,4a,4b,4c,4d,4e,4f,50";
+        String textoSimples = "44,45,53,45,4e,56,4f,4c,56,49,4d,45,4e,54,4f,21";
+        ArrayList<RoundKey> arr = er.executarRotinas(texto.split(","));        
 
     }
 }

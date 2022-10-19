@@ -12,14 +12,12 @@ import java.util.ArrayList;
  */
 public class ExecutadorRotinas {
     
-    //Apenas para chamada de métodos
-    private RoundKey call = new RoundKey();
     //Instâncias
     private RoundKey key = new RoundKey();
     //Variáveis
     private ArrayList<RoundKey> listRoundKeys = new ArrayList<>();
 
-    public void executarRotinas(String[] chave) {
+    public ArrayList<RoundKey> executarRotinas(String[] chave) {
         key.setRoundKey(chave);
         listRoundKeys.add(key);
         for (int i = 0; i < 10; i++) {
@@ -42,10 +40,11 @@ public class ExecutadorRotinas {
             String[] part6 = key.primeiraPalavraRoundKey(key.getWord(listRoundKeys.get(i).getRoundKey(), 0), part5);
             
             //Geração da nova word e da round key alterada
-            key = null;
-            key.setWord(key.getRoundKey(), part6, 0);
-            key.setRoundKeyAlterada(listRoundKeys.get(i));
-            listRoundKeys.add(key);
+            RoundKey key2 = new RoundKey();
+            key2.setWord(key2.getRoundKey(), part6, 0);
+            key2.setRoundKeyAlterada(listRoundKeys.get(i));
+            listRoundKeys.add(key2);
         }
+        return listRoundKeys;
     }
 }

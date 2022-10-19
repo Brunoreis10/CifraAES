@@ -62,18 +62,15 @@ public class RoundKey {
     public void setRoundKeyAlterada(RoundKey roundKeyAnt) {
         int contador = 0;
         int coluna = 1;
-        for (int i = 0; i < 3; ++i) {
-                    
-            String[] word1 = getWord(roundKeyAnt.getRoundKey(), contador++);
+        for (int i = 0; i < 3; i++) {     
+            String[] word1 = getWord(getRoundKey(), contador++);
             String[] word2 = getWord(roundKeyAnt.getRoundKey(), contador);
-            contador++;
-
             String[] wordComXor = xorRoundConstant(word1, word2);
             preencheRoundKeyAlterada(coluna++, wordComXor);
         }
     }
 
-    private void preencheRoundKeyAlterada(int coluna, String[] aWordXOR) {
+    public void preencheRoundKeyAlterada(int coluna, String[] aWordXOR) {
         for (int i = 0; i < 4; i++) {
             getRoundKey()[i][coluna] = aWordXOR[i];
         }
