@@ -54,16 +54,27 @@ public class ExecutadorRotinas {
 
     public void executarProcessoPosGeracaoRoundKeys() throws IOException {
         //File file = "Passar aqui o arquivo";
-        File file = null;
+        //File file = null;
+        List<String[][]> valoresCriptografados = new ArrayList<>();
 
-        byte[] fileToByte = Files.readAllBytes(file.toPath());
-
+        //byte[] fileToByte = Files.readAllBytes(file.toPath());
+        String[] vetAux = "44,45,53,45,4e,56,4f,4c,56,49,4d,45,4e,54,4f,21".split(",");
+        //for(int i=0;i<fileToByte.length;i++){
+           // vetAux[i] = String.valueOf(fileToByte[i]);
+        //}
         //Muda o vetor atual de byte para um bidimensional com 16 bits, para ser mais fácil a manipulação depois.
-        byte[][] vetBidimensional = utils.mudarVetParaBidimensional(fileToByte, 16);
+        String[][] vetBidimensional = utils.mudarVetParaBidimensional(vetAux);
+        valoresCriptografados.add(listRoundKeys.get(0).addRoundKey(vetBidimensional));
+        
+        RoundKey rk = new RoundKey();
+        rk.setMatrizRoundKey(valoresCriptografados.get(0));
+        rk.setMatrizRoundKey(rk.subBytes());
+        rk.setMatrizRoundKey(rk.shiftRows());
+        
+        
         
         //Realizar o processo de AddRoundKey, ShiftRows, MixColums
-        List<String[][]> valoresCriptografados = new ArrayList<>();
-        
+        ////
         
         String nomeArquivo = "Pegar o nome do arquivo";
         //Passar a lista de valores criptografados pelos métodoa anteriores

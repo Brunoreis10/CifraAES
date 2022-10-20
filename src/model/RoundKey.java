@@ -4,6 +4,8 @@
  */
 package model;
 
+import java.util.Arrays;
+
 /**
  *
  * @author Bruno Henrique Wiedemann Reis Lucas Miguel Vieira
@@ -15,6 +17,10 @@ public class RoundKey {
 
     public String[][] getRoundKey() {
         return matrizRoundKey;
+    }
+
+    public void setMatrizRoundKey(String[][] matrizRoundKey) {
+        this.matrizRoundKey = matrizRoundKey;
     }
 
     public void setRoundKey(String[] textoArquivo) {
@@ -62,7 +68,7 @@ public class RoundKey {
     public void setRoundKeyAlterada(RoundKey roundKeyAnt) {
         int contador = 0;
         int coluna = 1;
-        for (int i = 0; i < 3; i++) {     
+        for (int i = 0; i < 3; i++) {
             String[] word1 = getWord(getRoundKey(), contador++);
             String[] word2 = getWord(roundKeyAnt.getRoundKey(), contador);
             String[] wordComXor = xorRoundConstant(word1, word2);
@@ -75,7 +81,7 @@ public class RoundKey {
             getRoundKey()[i][coluna] = aWordXOR[i];
         }
     }
-    
+
     public void setWord(String[][] matrizRoundKey, String[] textoPrimeiraPalavra, int coluna) {
         int contador = 0;
         for (int i = 0; i < 4; i++) {
@@ -126,4 +132,54 @@ public class RoundKey {
 
         return palavra;
     }
+
+    public String[][] addRoundKey(String[][] roundKey) {
+        String[][] newRoundKey = new String[4][4];
+        RoundKey nova = new RoundKey();
+        for (int i = 0; i < 4; i++) {
+            int x = 0;
+            String[] word = {matrizRoundKey[i][x++], matrizRoundKey[i][x++], matrizRoundKey[i][x++], matrizRoundKey[i][x++]};
+            x = 0;
+            String[] word2 = {roundKey[i][x++], roundKey[i][x++], roundKey[i][x++], roundKey[i][x++]};
+            nova.setWord(newRoundKey, xorRoundConstant(word, word2), i);
+        }
+        return newRoundKey;
+    }
+
+    public String[][] subBytes() {
+        String[][] newRoundKey = new String[4][4];
+        RoundKey nova = new RoundKey();
+        for (int i = 0; i < 4; i++) {
+            int x = 0;
+            String[] word = {matrizRoundKey[i][x++], matrizRoundKey[i][x++], matrizRoundKey[i][x++], matrizRoundKey[i][x++]};
+            nova.setWord(newRoundKey, subWord(word), i);
+        }
+        return newRoundKey;
+    }
+
+    public String[][] shiftRows() {
+        String[] copy = new String[4];
+        copy = Arrays.copyOf(matrizRoundKey[1], 4);
+        matrizRoundKey[1][0] = copy[1];
+        matrizRoundKey[1][1] = copy[2];
+        matrizRoundKey[1][2] = copy[3];
+        matrizRoundKey[1][3] = copy[0];
+        copy = Arrays.copyOf(matrizRoundKey[2], 4);
+        matrizRoundKey[2][0] = copy[2];
+        matrizRoundKey[2][1] = copy[3];
+        matrizRoundKey[2][2] = copy[0];
+        matrizRoundKey[2][3] = copy[1];
+        copy = Arrays.copyOf(matrizRoundKey[3], 4);
+        matrizRoundKey[3][0] = copy[3];
+        matrizRoundKey[3][1] = copy[0];
+        matrizRoundKey[3][2] = copy[1];
+        matrizRoundKey[3][3] = copy[2];
+        return matrizRoundKey;
+    }
+
+    public String[][] mixedColumns(String[][] roundKey) {
+
+        return matrizRoundKey;
+    }
+
 }
