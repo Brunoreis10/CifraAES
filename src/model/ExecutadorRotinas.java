@@ -52,40 +52,47 @@ public class ExecutadorRotinas {
         return listRoundKeys;
     }
 
-    public void executarProcessoPosGeracaoRoundKeys() throws IOException {
-        //File file = "Passar aqui o arquivo";
-        //File file = null;
+    public void executarProcessoPosGeracaoRoundKeys(List<RoundKey> listRoundKeys, File file, String nomeArquivo) throws IOException {
         List<String[][]> valoresCriptografados = new ArrayList<>();
 
-        //byte[] fileToByte = Files.readAllBytes(file.toPath());
-        String[] vetAux = "44,45,53,45,4e,56,4f,4c,56,49,4d,45,4e,54,4f,21".split(",");
-        //for(int i=0;i<fileToByte.length;i++){
-           // vetAux[i] = String.valueOf(fileToByte[i]);
-        //}
-        //Muda o vetor atual de byte para um bidimensional com 16 bits, para ser mais fácil a manipulação depois.
+        byte[] fileToByte = Files.readAllBytes(file.toPath());
+        String[] vetAux = new String[fileToByte.length];
+        for (int i = 0; i < fileToByte.length; i++) {
+            vetAux[i] = String.valueOf(fileToByte[i]);
+        }
         String[][] vetBidimensional = utils.mudarVetParaBidimensional(vetAux);
-        valoresCriptografados.add(listRoundKeys.get(0).addRoundKey(vetBidimensional));
-        
-        RoundKey rk = new RoundKey();
-        rk.setMatrizRoundKey(valoresCriptografados.get(0));
-        rk.setMatrizRoundKey(rk.subBytes());
-        String [][] shiftRows = rk.shiftRows();
-        rk.setMatrizRoundKey(shiftRows.clone());
-        AESUtils aes = new AESUtils();
-        RoundKey rkAzul = new RoundKey();
-        rkAzul.setWord(rkAzul.getRoundKey(), aes.wordMixColumn(rk.getWordByColumn(0)), 0);
-        rkAzul.setWord( rkAzul.getRoundKey(), aes.wordMixColumn(rk.getWordByColumn(1)), 1);
-        rkAzul.setWord( rkAzul.getRoundKey(), aes.wordMixColumn(rk.getWordByColumn(2)), 2);
-        rkAzul.setWord(rkAzul.getRoundKey(), aes.wordMixColumn(rk.getWordByColumn(3)), 3);
-        valoresCriptografados.add(rkAzul.addRoundKey(listRoundKeys.get(1).getRoundKey()));
-        System.out.println("");
-        
-        
+
+        for (int i = 0; i < vetBidimensional.length; i++) {
+
+            RoundKey rk = new RoundKey();
+            rk.setMatrizRoundKey(listRoundKeys.get(i).addRoundKey(vetBidimensional));
+            rk.setMatrizRoundKey(rk.subBytes());
+            rk.setMatrizRoundKey(rk.shiftRows());
+            RoundKey rkAux = new RoundKey();
+            rkAux.setWord(rkAux.getRoundKey(), utils.wordMixColumn(rk.getWordByColumn(0)), 0);
+            rkAux.setWord(rkAux.getRoundKey(), utils.wordMixColumn(rk.getWordByColumn(1)), 1);
+            rkAux.setWord(rkAux.getRoundKey(), utils.wordMixColumn(rk.getWordByColumn(2)), 2);
+            rkAux.setWord(rkAux.getRoundKey(), utils.wordMixColumn(rk.getWordByColumn(3)), 3);
+            valoresCriptografados.add(rkAux.addRoundKey(listRoundKeys.get(i).getRoundKey()));
+
+        }
+//        valoresCriptografados.add(listRoundKeys.get(0).addRoundKey(vetBidimensional));
+//
+//        RoundKey rk = new RoundKey();
+//        rk.setMatrizRoundKey(valoresCriptografados.get(0));
+//        rk.setMatrizRoundKey(rk.subBytes());
+//        String[][] shiftRows = rk.shiftRows();
+//        rk.setMatrizRoundKey(shiftRows.clone());
+//        AESUtils aes = new AESUtils();
+//        RoundKey rkAzul = new RoundKey();
+//        rkAzul.setWord(rkAzul.getRoundKey(), aes.wordMixColumn(rk.getWordByColumn(0)), 0);
+//        rkAzul.setWord(rkAzul.getRoundKey(), aes.wordMixColumn(rk.getWordByColumn(1)), 1);
+//        rkAzul.setWord(rkAzul.getRoundKey(), aes.wordMixColumn(rk.getWordByColumn(2)), 2);
+//        rkAzul.setWord(rkAzul.getRoundKey(), aes.wordMixColumn(rk.getWordByColumn(3)), 3);
+//        valoresCriptografados.add(rkAzul.addRoundKey(listRoundKeys.get(1).getRoundKey()));
+
         //Realizar o processo de AddRoundKey, ShiftRows, MixColums
         ////
-        
-        String nomeArquivo = "Pegar o nome do arquivo";
-        //Passar a lista de valores criptografados pelos métodoa anteriores
         arquivo.escreverNoArquivo(nomeArquivo, valoresCriptografados);
     }
 }

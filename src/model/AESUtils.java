@@ -125,14 +125,6 @@ public class AESUtils {
         return roundConstant[indice];
     }
 
-//    public byte[][] mudarVetParaBidimensional(byte[] matriz, int largura) {
-//      int altura = matriz.length / largura;
-//      byte[][] ret = new byte[altura][largura];
-//      for (int i = 0; i < matriz.length; i++) {
-//            ret[i/largura][i%largura] = matriz[i];
-//      }
-//      return ret;
-//    }
     public String[][] mudarVetParaBidimensional(String[] matriz) {
         String[][] ret = new String[4][4];
         int z = 0;
@@ -146,33 +138,33 @@ public class AESUtils {
     }
 
     public int multiplicacaoGalois(String r, int valor) {
-        if(r.length()== 1){
-            r = "0"+r;
+        if (r.length() == 1) {
+            r = "0" + r;
         }
         String[] seila = r.split("");
-        if(r.equals("0")||r.equals("00")){
+        if (r.equals("0") || r.equals("00")) {
             return 0;
         }
         int galoi = tabelaL[0][valor];
 
-        int r1 = Integer.parseInt(tabelaL[Integer.parseInt(String.valueOf(seila[0]), 16)][Integer.parseInt(String.valueOf(seila[1]), 16)]+"");
+        int r1 = Integer.parseInt(tabelaL[Integer.parseInt(String.valueOf(seila[0]), 16)][Integer.parseInt(String.valueOf(seila[1]), 16)] + "");
 
-        int soma = r1+galoi;
-        if(soma>0xff){
-            soma-=0xff;
+        int soma = r1 + galoi;
+        if (soma > 0xff) {
+            soma -= 0xff;
         }
         String result = Integer.toHexString(soma);
-        int result1 = Integer.parseInt(String.valueOf(result.charAt(0)),16);
+        int result1 = Integer.parseInt(String.valueOf(result.charAt(0)), 16);
         int result2 = 0;
-        if(result.length()==1){
+        if (result.length() == 1) {
             result2 = result1;
             result1 = 0;
-        }else{            
-        result2 = Integer.parseInt(String.valueOf(result.charAt(1)),16);
+        } else {
+            result2 = Integer.parseInt(String.valueOf(result.charAt(1)), 16);
         }
-        
+
         return tabelaE[result1][result2];
-       
+
     }
 
     public String[] wordMixColumn(String[] word) {
@@ -182,7 +174,6 @@ public class AESUtils {
                     ^ multiplicacaoGalois(word[1], tabelaMultiplicacao[i][1])
                     ^ multiplicacaoGalois(word[2], tabelaMultiplicacao[i][2])
                     ^ multiplicacaoGalois(word[3], tabelaMultiplicacao[i][3]));
-                    System.out.println("");
         }
 
         return newWord;

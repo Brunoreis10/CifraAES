@@ -5,16 +5,25 @@
 package view;
 
 import java.awt.Color;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import model.Arquivo;
+import model.ExecutadorRotinas;
+import model.RoundKey;
 
 /**
  *
  * @author Bruno Henrique Wiedemann Reis Lucas Miguel Vieira
  */
 public class CifraAESUI extends javax.swing.JFrame {
+
+    Arquivo arquivo = new Arquivo();
 
     /**
      * Creates new form CifraAESUI
@@ -46,7 +55,7 @@ public class CifraAESUI extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         textArea = new javax.swing.JTextArea();
-        limparbtn = new javax.swing.JButton();
+        executarbtn = new javax.swing.JButton();
         limparbtn1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         titulo = new javax.swing.JLabel();
@@ -107,11 +116,11 @@ public class CifraAESUI extends javax.swing.JFrame {
         textArea.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jScrollPane1.setViewportView(textArea);
 
-        limparbtn.setText("Executar");
-        limparbtn.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        limparbtn.addActionListener(new java.awt.event.ActionListener() {
+        executarbtn.setText("Executar");
+        executarbtn.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        executarbtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                limparbtnActionPerformed(evt);
+                executarbtnActionPerformed(evt);
             }
         });
 
@@ -148,7 +157,7 @@ public class CifraAESUI extends javax.swing.JFrame {
                 .addGap(10, 10, 10))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(limparbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(executarbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(limparbtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(8, 8, 8))
@@ -176,7 +185,7 @@ public class CifraAESUI extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(8, 8, 8)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(limparbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(executarbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(limparbtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(8, Short.MAX_VALUE))
         );
@@ -247,6 +256,7 @@ public class CifraAESUI extends javax.swing.JFrame {
 
         if (ret == JFileChooser.APPROVE_OPTION) {
             arquivoArea.setText(fChooser.getSelectedFile().toString());
+            arquivo.setFile(fChooser.getSelectedFile());
         }
     }//GEN-LAST:event_jbSelecionarActionPerformed
 
@@ -258,20 +268,36 @@ public class CifraAESUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_chaveAreaActionPerformed
 
-    private void limparbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limparbtnActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_limparbtnActionPerformed
+    private void executarbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executarbtnActionPerformed
+        if (!chaveArea.getText().trim().equals("")
+                && !arquivoDestinoArea.getText().trim().equals("")
+                && !arquivoArea.getText().trim().equals("")) {
+            ExecutadorRotinas exec = new ExecutadorRotinas();
+            List<RoundKey> listRoundKeys = exec.executarRotinas(chaveArea.getText().trim().split(","));
+            try {
+                exec.executarProcessoPosGeracaoRoundKeys(listRoundKeys, arquivo.getFile(), arquivoDestinoArea.getText());
+            } catch (IOException ex) {
+                textArea.setText("Ocorreu erro no processo: " + ex.getMessage());
+            }
+            textArea.setText("Processo realizado com sucesso, seu arquivo está no diretório: " + "\n" + "\n" + new File(".").getAbsolutePath());
+        } else {
+            JOptionPane.showMessageDialog(null, "Existe um ou mais campos não preenchidos, favor verificar.");
+        }
+    }//GEN-LAST:event_executarbtnActionPerformed
 
     private void limparbtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limparbtn1ActionPerformed
-        // TODO add your handling code here:
+        chaveArea.setText("");
+        arquivoDestinoArea.setText("");
+        arquivoArea.setText("");
+        textArea.setText("");
     }//GEN-LAST:event_limparbtn1ActionPerformed
 
-  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField arquivoArea;
     private javax.swing.JTextField arquivoDestinoArea;
     private javax.swing.JTextField chaveArea;
+    private javax.swing.JButton executarbtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -279,7 +305,6 @@ public class CifraAESUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton jbSelecionar;
-    private javax.swing.JButton limparbtn;
     private javax.swing.JButton limparbtn1;
     private javax.swing.JTextArea textArea;
     private javax.swing.JLabel titulo;
