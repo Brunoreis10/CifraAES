@@ -275,7 +275,7 @@ public class CifraAESUI extends javax.swing.JFrame {
             ExecutadorRotinas exec = new ExecutadorRotinas();
             List<RoundKey> listRoundKeys = exec.executarRotinas(chaveArea.getText().trim().split(","));
             try {
-                exec.executarProcessoPosGeracaoRoundKeys(listRoundKeys, arquivo.getFile(), arquivoDestinoArea.getText());
+                exec.executarProcessoPosGeracaoRoundKeys(listRoundKeys, arquivo.getFile(), arquivoDestinoArea.getText().concat(".txt"));
             } catch (IOException ex) {
                 textArea.setText("Ocorreu erro no processo: " + ex.getMessage());
             }
