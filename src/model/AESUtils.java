@@ -70,16 +70,15 @@ public class AESUtils {
     {0x67, 0x4a, 0xed, 0xde, 0xc5, 0x31, 0xfe, 0x18, 0x0d, 0x63, 0x8c, 0x80, 0xc0, 0xf7, 0x70, 0x07}};
 
     int[] roundConstant = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36};
-    
-    public static final int[][] tabelaMultiplicacao = {{2,3,1,1},
-                                                      {1,2,3,1},
-                                                      {1,1,2,3},
-                                                      {3,1,1,2}};
-    
+
+    public static final int[][] tabelaMultiplicacao = {{2, 3, 1, 1},
+    {1, 2, 3, 1},
+    {1, 1, 2, 3},
+    {3, 1, 1, 2}};
 
     public byte[] codificarFileToBinary(File file) throws Exception {
         try {
-             return Files.readAllBytes(file.toPath());
+            return Files.readAllBytes(file.toPath());
         } catch (FileNotFoundException e) {
             throw new Exception(e);
         } catch (IOException e) {
@@ -125,7 +124,7 @@ public class AESUtils {
     public Integer getVetRoundConstant(Integer indice) {
         return roundConstant[indice];
     }
-    
+
 //    public byte[][] mudarVetParaBidimensional(byte[] matriz, int largura) {
 //      int altura = matriz.length / largura;
 //      byte[][] ret = new byte[altura][largura];
@@ -134,23 +133,58 @@ public class AESUtils {
 //      }
 //      return ret;
 //    }
-        public String[][] mudarVetParaBidimensional(String[] matriz) {
-      String[][] ret = new String[4][4];
-      int z = 0;
-      for (int i = 0; i < 4; i++) {
+    public String[][] mudarVetParaBidimensional(String[] matriz) {
+        String[][] ret = new String[4][4];
+        int z = 0;
+        for (int i = 0; i < 4; i++) {
             for (int y = 0; y < 4; y++) {
                 ret[y][i] = matriz[z];
                 z++;
             }
-      }
-      return ret;
+        }
+        return ret;
     }
+
+    public int multiplicacaoGalois(String r, int valor) {
+        if(r.length()== 1){
+            r = "0"+r;
+        }
+        String[] seila = r.split("");
+        if(r.equals("0")||r.equals("00")){
+            return 0;
+        }
+        int galoi = tabelaL[0][valor];
+
+        int r1 = Integer.parseInt(tabelaL[Integer.parseInt(String.valueOf(seila[0]), 16)][Integer.parseInt(String.valueOf(seila[1]), 16)]+"");
+
+        int soma = r1+galoi;
+        if(soma>0xff){
+            soma-=0xff;
+        }
+        String result = Integer.toHexString(soma);
+        int result1 = Integer.parseInt(String.valueOf(result.charAt(0)),16);
+        int result2 = 0;
+        if(result.length()==1){
+            result2 = result1;
+            result1 = 0;
+        }else{            
+        result2 = Integer.parseInt(String.valueOf(result.charAt(1)),16);
+        }
         
-        
-      public String multiplicacaoGalois(String r,int valor){
-          r = "FF";
-          String[] seila = r.split("");
-          String teste = tabelaL[Integer.parseInt(String.valueOf(seila[0]), 16)][Integer.parseInt(String.valueOf(seila[1]), 16)]+"";
-          return Integer.toHexString(Integer.parseInt(teste))+"";
-      }
+        return tabelaE[result1][result2];
+       
+    }
+
+    public String[] wordMixColumn(String[] word) {
+        String[] newWord = new String[4];
+        for (int i = 0; i < 4; i++) {
+            newWord[i] = Integer.toHexString(multiplicacaoGalois(word[0], tabelaMultiplicacao[i][0])
+                    ^ multiplicacaoGalois(word[1], tabelaMultiplicacao[i][1])
+                    ^ multiplicacaoGalois(word[2], tabelaMultiplicacao[i][2])
+                    ^ multiplicacaoGalois(word[3], tabelaMultiplicacao[i][3]));
+                    System.out.println("");
+        }
+
+        return newWord;
+    }
 }

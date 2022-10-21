@@ -70,6 +70,13 @@ public class ExecutadorRotinas {
         rk.setMatrizRoundKey(valoresCriptografados.get(0));
         rk.setMatrizRoundKey(rk.subBytes());
         rk.setMatrizRoundKey(rk.shiftRows());
+        AESUtils aes = new AESUtils();
+        RoundKey rkAzul = new RoundKey();
+        rkAzul.setWord(rkAzul.getRoundKey(), aes.wordMixColumn(rk.getWordByColumn(0)), 0);
+        rkAzul.setWord( rkAzul.getRoundKey(), aes.wordMixColumn(rk.getWordByColumn(1)), 1);
+        rkAzul.setWord( rkAzul.getRoundKey(), aes.wordMixColumn(rk.getWordByColumn(2)), 2);
+        rkAzul.setWord(rkAzul.getRoundKey(), aes.wordMixColumn(rk.getWordByColumn(3)), 3);
+        System.out.println("");
         
         
         

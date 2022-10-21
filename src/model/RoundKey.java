@@ -176,10 +176,19 @@ public class RoundKey {
         matrizRoundKey[3][3] = copy[2];
         return matrizRoundKey;
     }
+    
+    public String[] getWordByColumn(int i){
+        String[] word = new String[4];
+        for(int x=0;x<4;x++){
+            word[x] = matrizRoundKey[x][i];
+        }
+        return word;
+    }
 
-    public String[][] mixedColumns(String[][] roundKey) {
-
-        return matrizRoundKey;
+    public RoundKey mixedColumns(String[][] roundKey) {
+        RoundKey rk = new RoundKey();
+        
+        return rk;
     }
 
 }

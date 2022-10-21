@@ -30,7 +30,6 @@ public static void main(String[] args) throws Exception {
         //retorno = utils.codificarFileToBinary(file);
         //System.out.print(retorno.toString());
         AESUtils aes = new AESUtils();
-        System.out.println(aes.multiplicacaoGalois("", 0));
         
         ExecutadorRotinas er = new ExecutadorRotinas();
         String texto = "41,42,43,44,45,46,47,48,49,4a,4b,4c,4d,4e,4f,50";
