@@ -107,8 +107,6 @@ public class AESUtils {
         StringBuilder builder = new StringBuilder();
         for (byte iByte : bytes) {
             builder.append(String.format("%02x", iByte));
-            // upperCase
-            // result.append(String.format("%02X", aByte));
         }
         return builder.toString();
     }

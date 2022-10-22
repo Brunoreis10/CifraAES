@@ -8,7 +8,8 @@ package model;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -28,21 +29,25 @@ public class Arquivo {
     }
 
     public void escreverNoArquivo(String nomeArquivo, List<String[][]> valoresCriptografados) throws IOException {
-        try (OutputStream outputWriter = new FileOutputStream(nomeArquivo)) {
-            for (int x = 0; x < valoresCriptografados.size(); x++) {
-                String[][] valores = valoresCriptografados.get(x);
-                for (int i = 0; i < 4; i++) {
-                    for (int j = 0; j < 4; j++) {
-                        String valorEmHexaDecimal = valores[i][j];
-                        int intValue = Integer.parseInt(valorEmHexaDecimal, 16);
-                        try {
-                            outputWriter.write(intValue);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+        try ( OutputStreamWriter outputWriter = new OutputStreamWriter(new FileOutputStream(nomeArquivo), StandardCharsets.UTF_8)) {
+
+            String[][] valores = valoresCriptografados.get(10);
+            for (int i = 0; i < 4; i++) {
+                String value = "";
+                for (int j = 0; j < 4; j++) {
+                    String valorEmHexaDecimal = valores[j][i];
+                    value += "0x" + valorEmHexaDecimal + " ";
+
                 }
+                value += "\r\n";
+                try {
+                    outputWriter.write(value);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             }
+
         }
     }
 }

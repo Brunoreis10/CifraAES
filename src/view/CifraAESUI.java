@@ -272,6 +272,7 @@ public class CifraAESUI extends javax.swing.JFrame {
         if (!chaveArea.getText().trim().equals("")
                 && !arquivoDestinoArea.getText().trim().equals("")
                 && !arquivoArea.getText().trim().equals("")) {
+            arquivo.setFile(new File(arquivoArea.getText()));
             ExecutadorRotinas exec = new ExecutadorRotinas();
             List<RoundKey> listRoundKeys = exec.executarRotinas(chaveArea.getText().trim().split(","));
             try {

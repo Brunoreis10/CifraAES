@@ -58,41 +58,32 @@ public class ExecutadorRotinas {
         byte[] fileToByte = Files.readAllBytes(file.toPath());
         String[] vetAux = new String[fileToByte.length];
         for (int i = 0; i < fileToByte.length; i++) {
-            vetAux[i] = String.valueOf(fileToByte[i]);
+            vetAux[i] = Integer.toHexString(Integer.parseInt(String.valueOf(fileToByte[i])));
         }
         String[][] vetBidimensional = utils.mudarVetParaBidimensional(vetAux);
 
-        for (int i = 0; i < vetBidimensional.length; i++) {
+        valoresCriptografados.add(listRoundKeys.get(0).addRoundKey(vetBidimensional));
+
+        for (int i = 0; i < 10; i++) {
 
             RoundKey rk = new RoundKey();
-            rk.setMatrizRoundKey(listRoundKeys.get(i).addRoundKey(vetBidimensional));
+            rk.setMatrizRoundKey(valoresCriptografados.get(i));
             rk.setMatrizRoundKey(rk.subBytes());
-            rk.setMatrizRoundKey(rk.shiftRows());
-            RoundKey rkAux = new RoundKey();
-            rkAux.setWord(rkAux.getRoundKey(), utils.wordMixColumn(rk.getWordByColumn(0)), 0);
-            rkAux.setWord(rkAux.getRoundKey(), utils.wordMixColumn(rk.getWordByColumn(1)), 1);
-            rkAux.setWord(rkAux.getRoundKey(), utils.wordMixColumn(rk.getWordByColumn(2)), 2);
-            rkAux.setWord(rkAux.getRoundKey(), utils.wordMixColumn(rk.getWordByColumn(3)), 3);
-            valoresCriptografados.add(rkAux.addRoundKey(listRoundKeys.get(i).getRoundKey()));
+            String[][] shiftRows = rk.shiftRows();
+            rk.setMatrizRoundKey(shiftRows.clone());
+            if (i != 9) {
+                RoundKey rkAux = new RoundKey();
+                rkAux.setWord(rkAux.getRoundKey(), utils.wordMixColumn(rk.getWordByColumn(0)), 0);
+                rkAux.setWord(rkAux.getRoundKey(), utils.wordMixColumn(rk.getWordByColumn(1)), 1);
+                rkAux.setWord(rkAux.getRoundKey(), utils.wordMixColumn(rk.getWordByColumn(2)), 2);
+                rkAux.setWord(rkAux.getRoundKey(), utils.wordMixColumn(rk.getWordByColumn(3)), 3);
+                valoresCriptografados.add(rkAux.addRoundKey(listRoundKeys.get(i + 1).getRoundKey()));
+            } else {
+                valoresCriptografados.add(rk.addRoundKey(listRoundKeys.get(i + 1).getRoundKey()));
+            }
 
         }
-//        valoresCriptografados.add(listRoundKeys.get(0).addRoundKey(vetBidimensional));
-//
-//        RoundKey rk = new RoundKey();
-//        rk.setMatrizRoundKey(valoresCriptografados.get(0));
-//        rk.setMatrizRoundKey(rk.subBytes());
-//        String[][] shiftRows = rk.shiftRows();
-//        rk.setMatrizRoundKey(shiftRows.clone());
-//        AESUtils aes = new AESUtils();
-//        RoundKey rkAzul = new RoundKey();
-//        rkAzul.setWord(rkAzul.getRoundKey(), aes.wordMixColumn(rk.getWordByColumn(0)), 0);
-//        rkAzul.setWord(rkAzul.getRoundKey(), aes.wordMixColumn(rk.getWordByColumn(1)), 1);
-//        rkAzul.setWord(rkAzul.getRoundKey(), aes.wordMixColumn(rk.getWordByColumn(2)), 2);
-//        rkAzul.setWord(rkAzul.getRoundKey(), aes.wordMixColumn(rk.getWordByColumn(3)), 3);
-//        valoresCriptografados.add(rkAzul.addRoundKey(listRoundKeys.get(1).getRoundKey()));
 
-        //Realizar o processo de AddRoundKey, ShiftRows, MixColums
-        ////
         arquivo.escreverNoArquivo(nomeArquivo, valoresCriptografados);
     }
 }
